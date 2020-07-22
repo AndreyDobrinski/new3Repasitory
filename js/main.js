@@ -13,21 +13,21 @@ const EMPTY = ' '
 
 var gBoard;
 var gLvl;
-var bombsOnBoard ;
+var bombsOnBoard;
+var gInterval;
 
-function initGame() {
-    gLvl = {
-        SIZE: 4,
-        BOMBS: 2
-    };
+function initGame(lvl = 'Beginner') {
+    gLvl = setGameDiff(lvl)
+    bombsOnBoard = gLvl.BOMBS;
     gBoard = buildBoard(gLvl);
     renderBoard(gBoard);
     // console.table(gBoard);
 
 }
 
+
 // making the game in console
-function buildBoard(gLvl) {
+function buildBoard() {
     var board = [];
     var boombsPos = randomMinesPos();
     var currBombsPos;
@@ -53,7 +53,7 @@ function buildBoard(gLvl) {
         board[currBombsPos.i][currBombsPos.j].isMine = true;
         // bombsOnBoard++;
     }
-    
+
     // console.log(bombsOnBoard);
     // bombsOnBoard = 0 ;
     setMinesNegsCount(board);
@@ -88,6 +88,37 @@ function renderBoard(board) {
     }
     var elBoard = document.querySelector('.mine-sweeper');
     elBoard.innerHTML = strHtml;
+    var bombCounter = document.querySelector('.counting-numbers');
+    var counter = bombCounter.querySelector('.bomb-counter');
+    counter.querySelector('span').innerText = bombsOnBoard--;
+}
+
+// change difficuluty
+function setGameDiff(lvl) {
+    gLvl = {
+        SIZE: 4,
+        BOMBS: 2
+    };
+
+    if (lvl === 'Beginner' ) return gLvl;
+
+    switch (lvl) {
+        case 'Beginner':
+            gLvl.SIZE = 4
+            gLvl.BOMBS = 2
+            break;
+        case 'Medium':
+            gLvl.SIZE = 8
+            gLvl.BOMBS = 12
+            break;
+        case 'Expert':
+            gLvl.SIZE = 12
+            gLvl.BOMBS = 30
+            break;
+
+        default: break
+    }
+    return gLvl
 }
 
 
@@ -130,7 +161,7 @@ function randomMinesPos() {
     var numsOnBoard = []
     var minesPos = []
     for (var i = 0; i < (gLvl.SIZE ** 2); i++) {
-        
+
         nums.push(i);
     }
     for (var i = 0; i < gLvl.BOMBS; i++) {
@@ -147,7 +178,12 @@ function cellClicked(elCell, i, j) {
     var cell = gBoard[i][j];
     cell.isShown = true;
     // if(cell.isMine) alert('game over');
-
+if (cell.isMine){
+    var bombCounter = document.querySelector('.counting-numbers');
+    var counter = bombCounter.querySelector('.bomb-counter');
+    counter.querySelector('span').innerText = bombsOnBoard--;
+}
+// if (cell.isShown) startTimer();
     // console.log(cell);
 
     var elCellSpan = elCell.querySelector('span');
@@ -156,6 +192,22 @@ function cellClicked(elCell, i, j) {
 }
 
 
+
+// function startTimer() {
+//     //gIsTimerOn = true;
+//     var elTimer = document.querySelector('.timer');
+//     elTimer.style.display = 'block';
+//     gInterval = setInterval(setTime, 1000);
+// }
+
+// function setTime() {
+//     gTotalSeconds++;
+//     var secondsText = pad(gTotalSeconds % 60);
+//     var minutesText = pad(parseInt(gTotalSeconds / 60));
+//     var eltimer=document.querySelector('.timer h3 span');
+//     eltimer.innerHTML= minutesText+':'+secondsText;
+    
+// }
 
 function cellMarked(elCell) {
 

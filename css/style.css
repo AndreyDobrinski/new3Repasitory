@@ -16,12 +16,12 @@ td {
     width: 40px;
 }
 
-span {
+table span {
 visibility: hidden;
 }
 
-body{
-    background-image: url('http://i.stack.imgur.com/kx8MT.gif');
+ body{ 
+     background-image: url('http://i.stack.imgur.com/kx8MT.gif');
     background-size: cover;
     height: 100vh;
     padding:0;
@@ -29,5 +29,9 @@ body{
     color: aqua;
 }
 .btns{
-margin: auto;
-}
+    text-align: center;
+    width: 600px;
+    height: 100px;
+    margin: 0 auto;
+    color: white;
+} 
