@@ -10,11 +10,13 @@
 
     <h1> Welcome to Mine Sweeper!</h1>
 
-<ul class="counting-numbers">
-    <li class="bomb-counter" > Bombs left: <span></span> </li>
-</ul>
+<div class="counting-numbers">
+    <span class="bomb-counter" > Bombs : <span></span> </span>
+    <button onclick="initGame()"> 🙂 </button>
+    <span class="timer" > Timer: <span></span> </span>
+</div>
 
-    <!-- <button onclick="initGame()"> 🙂 </button> -->
+
 
     <div class="btns">
         <button class="Beginner" onclick="initGame('Beginner')">Beginner 4x4</button>
@@ -23,9 +25,7 @@
 
     </div>
 
-<!-- <div class="timer">
-    <h3>game time:<span></span></h3>
-</div> -->
+
 
     
     <table class="game">

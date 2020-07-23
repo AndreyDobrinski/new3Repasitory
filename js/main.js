@@ -15,13 +15,28 @@ var gBoard;
 var gLvl;
 var bombsOnBoard;
 var gInterval;
+var gStart;
+var gGame;
+var gRevealCells;
+var gEndGame;
 
 function initGame(lvl = 'Beginner') {
+    gEndGame = false
+    restartTime();
+    clearInterval(gInterval);
+    gRevealCells = 0
+    gGame = {
+        isOn: false,
+        shownCount: 0,
+        markedCount: 0,
+        secsPassed: 0
+    };
     gLvl = setGameDiff(lvl)
     bombsOnBoard = gLvl.BOMBS;
     gBoard = buildBoard(gLvl);
     renderBoard(gBoard);
     // console.table(gBoard);
+    // gGame.isOn = true;
 
 }
 
@@ -82,7 +97,7 @@ function renderBoard(board) {
                 cellStr += ' Empty';
                 cellContent = cell.minesAroundCount;
             }
-            strHtml += `<td class="${cellStr}"  onclick="cellClicked(this,${i},${j})"><span>${cellContent}</span></td>`;
+            strHtml += `<td class="${cellStr}" oncontextmenu="cellMarked(this, ${i}, ${j});return false;" onclick="cellClicked(this,${i},${j})"><span>${cellContent}</span></td>`;
         }
         strHtml += '</tr>' // end
     }
@@ -97,25 +112,26 @@ function renderBoard(board) {
 function setGameDiff(lvl) {
     gLvl = {
         SIZE: 4,
-        BOMBS: 2
+        BOMBS: 2,
+        NORMALCELLS : 14
     };
-
-    if (lvl === 'Beginner' ) return gLvl;
-
+    if (lvl === 'Beginner') return gLvl;
     switch (lvl) {
         case 'Beginner':
             gLvl.SIZE = 4
             gLvl.BOMBS = 2
+            gLvl.NORMALCELLS = 14
             break;
         case 'Medium':
             gLvl.SIZE = 8
             gLvl.BOMBS = 12
+            gLvl.NORMALCELLS = 52
             break;
         case 'Expert':
             gLvl.SIZE = 12
             gLvl.BOMBS = 30
+            gLvl.NORMALCELLS = 114
             break;
-
         default: break
     }
     return gLvl
@@ -147,8 +163,6 @@ function findMinesNegsCount(board, row, column) {
             var curr = board[i][j];
             if (curr.isMine) numOfNegsAroundMines++;
         }
-
-
     }
     return numOfNegsAroundMines;
 }
@@ -176,14 +190,22 @@ function randomMinesPos() {
 // see the amount of bombs near cell 
 function cellClicked(elCell, i, j) {
     var cell = gBoard[i][j];
+    if (gEndGame) return
+    if (!gGame.isOn) {
+        gGame.isOn = !gGame.isOn
+        gStart = Date.now()
+        setTime(gStart)
+    }
     cell.isShown = true;
+    if (cell.isShown) gRevealCells++
     // if(cell.isMine) alert('game over');
-if (cell.isMine){
-    var bombCounter = document.querySelector('.counting-numbers');
-    var counter = bombCounter.querySelector('.bomb-counter');
-    counter.querySelector('span').innerText = bombsOnBoard--;
-}
-// if (cell.isShown) startTimer();
+    if (cell.isMine) {
+        var bombCounter = document.querySelector('.counting-numbers');
+        var counter = bombCounter.querySelector('.bomb-counter');
+        counter.querySelector('span').innerText = bombsOnBoard--;
+        gameLost()
+    }
+    // if (cell.isShown) startTimer();
     // console.log(cell);
 
     var elCellSpan = elCell.querySelector('span');
@@ -192,27 +214,49 @@ if (cell.isMine){
 }
 
 
+function gameWon() {
+    gGame.isOn = false;
+    gEndGame = true;
+    console.log('you won');
+    clearInterval(gInterval);
+}
 
-// function startTimer() {
-//     //gIsTimerOn = true;
-//     var elTimer = document.querySelector('.timer');
-//     elTimer.style.display = 'block';
-//     gInterval = setInterval(setTime, 1000);
-// }
-
-// function setTime() {
-//     gTotalSeconds++;
-//     var secondsText = pad(gTotalSeconds % 60);
-//     var minutesText = pad(parseInt(gTotalSeconds / 60));
-//     var eltimer=document.querySelector('.timer h3 span');
-//     eltimer.innerHTML= minutesText+':'+secondsText;
+function gameLost() {
+    gGame.isOn = false;
+    gEndGame = true;
+    console.log('you lost');
+    clearInterval(gInterval);
     
-// }
+}
 
 function cellMarked(elCell) {
+    
+}
+
+function showBombs (){
 
 }
 
+function showCells (){
+    
+}
+
+
+
+
+function setTime() {
+    gInterval = setInterval(timer, 1000);
+}
+function timer() {
+    var date = new Date() - gStart;
+    date = Math.floor(date / 1000);
+    var elTimer = document.querySelector('.timer');
+    elTimer.querySelector('span').innerText = date;
+}
+function restartTime() {
+    var time = document.querySelector('.timer')
+    time.querySelector('span').innerText = '0'
+}
 
 
 
