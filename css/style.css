@@ -2,7 +2,11 @@ h1 {
     text-align: center;
     color: white;
 }
-
+ 
+h2 {
+    text-align: center;
+    color: white;
+}
 table{
     margin:  auto;
 }
@@ -14,13 +18,19 @@ td {
     text-align: center;
     height: 40px;
     width: 40px;
+    background-color: blue;
+
 }
 
 table span {
     visibility: hidden;
 }
-.flaged {
+.marked {
     visibility: visible;
+}
+
+.mine-counter {
+    left:75px;
 }
 
  body{ 
@@ -46,4 +56,8 @@ table span {
     width: 200px;
     margin-bottom: 40px;
     color: white;
+}
+
+.clicked {
+    background-color: green;
 }
